@@ -25,7 +25,9 @@
         //helper function to display tweets: adds tweet to top of section
         var displayTweet = function (tweet, $tweetLocation) {
           var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
+          //use regular expression to get useful part of date
+          var tweetTime = /\w{3} \w{3} \d{1,2} \d{4} \d{2}:\d{2}:\d{2}/.exec(tweet.created_at.toString());
+          $tweet.text(tweetTime + ' @' + tweet.user + ': ' + tweet.message);
           $tweet.prependTo($tweetLocation)
         }
 
@@ -51,8 +53,8 @@
         refreshTweets();
         
         $('#refreshButton').on('click', function () {
-          //Create an interval function that adds new tweets if streams.home.length has changed
           refreshTweets();
+          //Create an interval function that adds new tweets if streams.home.length has changed
           intervalID = setInterval(refreshTweets, 1500);
           $(this).text('Refreshing...');
           $('#stopButton').toggle();
