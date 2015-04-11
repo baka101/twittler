@@ -3,20 +3,24 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
+    <div class="container">
+      <h1>JP&#39s Twittler</h1>
+      <div class="buttons">
+        <button type="button" class="btn btn-success" id="refreshButton">Click to Refresh</button>
+        <button type="button" class="btn btn-danger" id="stopButton" style="display:none">Stop</button>
+        <br>
+        <br>
+        <br>
+      </div>
 
-    <h1>JP&#39s Twittler</h1>
-    <div class="buttons">
-      <button type="button" id="refreshButton">Click to Refresh</button>
-      <button type="button" id="stopButton" style="display:none">Stop</button>
-      <br>
-      <br>
-      <br>
+      <section class="tweets"></section>
     </div>
-
-    <section class="tweets"></section>
-
+    
     <script>
       $(document).ready(function(){
         var $tweetSection = $('section.tweets');
