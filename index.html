@@ -5,20 +5,45 @@
     <script src="data_generator.js"></script>
   </head>
   <body>
+
+    <h1>JP&#39s Twittler</h1>
+
+    <section class="tweets"></section>
+
     <script>
-
       $(document).ready(function(){
-        var $body = $('body');
-        $body.html('');
+        var $tweetSection = $('section.tweets');
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
+        //helper function to display tweets: adds tweet to top of section
+        var displayTweet = function (tweet, $tweetLocation) {
           var $tweet = $('<div></div>');
           $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
+          $tweet.prependTo($tweetLocation)
         }
+
+        //helper function to refresh and display new tweets
+        var refreshTweets = function () {
+          //check length of streams.home.  If it has changed, add new tweet
+          if (streams.home.shown !== streams.home.length)
+          {
+            for (var i=streams.home.shown; i<streams.home.length; i++)
+            {
+              displayTweet(streams.home[i], $tweetSection);
+            }
+
+            //update new shown length
+            streams.home.shown = streams.home.length;
+          }
+
+          return streams.home.shown;
+        }
+
+        //refresh once to display initial tweets
+        streams.home.shown = 0;
+        refreshTweets();
+        
+        //Create an interval function that adds new tweets if streams.home.length has changed
+        setInterval(refreshTweets, 1500);
 
       });
 
