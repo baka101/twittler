@@ -7,12 +7,20 @@
   <body>
 
     <h1>JP&#39s Twittler</h1>
+    <div class="buttons">
+      <button type="button" id="refreshButton">Click to Refresh</button>
+      <button type="button" id="stopButton" style="display:none">Stop</button>
+      <br>
+      <br>
+      <br>
+    </div>
 
     <section class="tweets"></section>
 
     <script>
       $(document).ready(function(){
         var $tweetSection = $('section.tweets');
+        var intervalID = 0;
 
         //helper function to display tweets: adds tweet to top of section
         var displayTweet = function (tweet, $tweetLocation) {
@@ -42,11 +50,21 @@
         streams.home.shown = 0;
         refreshTweets();
         
-        //Create an interval function that adds new tweets if streams.home.length has changed
-        setInterval(refreshTweets, 1500);
+        $('#refreshButton').on('click', function () {
+          //Create an interval function that adds new tweets if streams.home.length has changed
+          refreshTweets();
+          intervalID = setInterval(refreshTweets, 1500);
+          $(this).text('Refreshing...');
+          $('#stopButton').toggle();
+        });
+
+        $('#stopButton').on('click', function () {
+          clearInterval(intervalID);
+          $('#refreshButton').text('Click to Refresh');          
+          $(this).toggle();          
+        });
 
       });
-
     </script>
   </body>
 </html>
