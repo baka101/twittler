@@ -1,0 +1,15 @@
+div.controls {
+	margin: 10px 0 30px;
+}
+
+p.tweet-message {
+	margin-bottom: 0;
+}
+
+span.tweet-user {
+	font-weight: bold;
+}
+
+span.tweet-time {
+	color: #888;
+}
