@@ -60,28 +60,39 @@
         }
 
         //helper function to refresh and display new tweets
-        var refreshTweets = function () {
-          //check length of streams.home; if it has changed, add new tweet
-          if (streams.home.shown !== streams.home.length)
+        var refreshTweets = function (streams, key) {
+          
+          //check edge case of undefined shown counter
+          if (typeof streams.shown === 'undefined')
           {
-            for (var i=streams.home.shown; i<streams.home.length; i++)
+            streams.shown = {};
+            streams.shown[key] = 0;
+          } 
+          
+
+          var shown = streams.shown[key];
+
+
+          //check length of streams.home; if it has changed, add new tweet
+          if (shown !== streams[key].length)
+          {
+            for (var i=shown; i<streams[key].length; i++)
             {
-              displayTweet(streams.home[i], $tweetSection);
+              displayTweet(streams[key][i], $tweetSection);
             }
 
             //update new shown length
-            streams.home.shown = streams.home.length;
+            streams.shown[key] = streams[key].length;
           }
 
-          return streams.home.shown;
+          return streams[key].length;
         }
 
         /***********************************
         SCRIPT WHEN PAGE LOADS
         ************************************/
         //refresh once to display initial tweets
-        streams.home.shown = 0;
-        refreshTweets();
+        refreshTweets(streams, 'home');
 
         /************************
         BUTTONS AND INTERACTIONS
@@ -89,9 +100,11 @@
 
         //button to start refreshing the feed
         $('#refreshButton').on('click', function () {
-          refreshTweets();
+          refreshTweets(streams, 'home');
           //Create an interval function that adds new tweets if streams.home.length has changed
-          intervalID = setInterval(refreshTweets, 1000);
+          intervalID = setInterval(function () {
+            refreshTweets(streams, 'home')
+          }, 1000);
           $(this).text('Refreshing...');
           $('#stopButton').toggle();
         });
