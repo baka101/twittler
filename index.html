@@ -14,8 +14,9 @@
           <div class="header text-center">
             <h1>JP&#39s Twittler</h1>
             <div class="controls">
+              <button type="button" class="btn btn-default" id="homeButton">Home</button>
               <button type="button" class="btn btn-success" id="refreshButton">Click to Refresh</button>
-              <button type="button" class="btn btn-danger" id="stopButton" style="display:none">Stop</button>
+              <button type="button" class="btn btn-danger" id="stopButton">Stop</button>
             </div>
           </div>
 
@@ -26,8 +27,14 @@
     
     <script>
       $(document).ready(function(){
-        var $tweetSection = $('.tweets');
+
+        /******************************************
+        INITIATING VARIABLES
+        *******************************************/
+        var $tweetSection = $('ul.tweets');
         var intervalID = 0;
+        var activeStream = streams;
+        var activeKey = 'home';
 
         /*****************************************
         HELPER FUNCTIONS
@@ -41,7 +48,7 @@
           $tweetMessage.addClass('tweet-message');
           $tweetMessage.text(tweet.message);
 
-          $tweetUser = $('<span></span>');
+          $tweetUser = $('<a></a>');
           $tweetUser.addClass('tweet-user');
           $tweetUser.text('@' + tweet.user);
           
@@ -60,18 +67,16 @@
         }
 
         //helper function to refresh and display new tweets
-        var refreshTweets = function (streams, key) {
-          
+        var refreshTweets = function (streams, key, index) {
+
           //check edge case of undefined shown counter
           if (typeof streams.shown === 'undefined')
-          {
             streams.shown = {};
-            streams.shown[key] = 0;
-          } 
           
-
-          var shown = streams.shown[key];
-
+          if (typeof index === 'undefined')
+            var shown = streams.shown[key] || 0;
+          else
+            var shown = index;
 
           //check length of streams.home; if it has changed, add new tweet
           if (shown !== streams[key].length)
@@ -92,7 +97,7 @@
         SCRIPT WHEN PAGE LOADS
         ************************************/
         //refresh once to display initial tweets
-        refreshTweets(streams, 'home');
+        refreshTweets(activeStream, activeKey);
 
         /************************
         BUTTONS AND INTERACTIONS
@@ -100,10 +105,10 @@
 
         //button to start refreshing the feed
         $('#refreshButton').on('click', function () {
-          refreshTweets(streams, 'home');
-          //Create an interval function that adds new tweets if streams.home.length has changed
+          refreshTweets(activeStream, activeKey);
+          //Create an interval function that refreshes new tweets
           intervalID = setInterval(function () {
-            refreshTweets(streams, 'home')
+            refreshTweets(activeStream, activeKey)
           }, 1000);
           $(this).text('Refreshing...');
           $('#stopButton').toggle();
@@ -114,6 +119,27 @@
           clearInterval(intervalID);
           $('#refreshButton').text('Click to Refresh');          
           $(this).toggle();          
+        });
+
+        //clicking on a user name brings up user's feed 
+        $('ul.tweets').on('click', 'a.tweet-user', function () {
+          var userName = $(this).text();
+          userName = userName.slice(1);
+
+          $('#homeButton').toggle();
+          activeStream = streams.users;
+          activeKey = userName;
+          $tweetSection.html('');
+          refreshTweets(activeStream, activeKey, 0);
+        });
+
+        //button to bring it back to the home feed
+        $('#homeButton').on('click', function () {
+          $(this).toggle();
+          activeStream = streams;
+          activeKey = 'home';
+          $tweetSection.html('');
+          refreshTweets(activeStream, activeKey, 0);
         });
 
       });

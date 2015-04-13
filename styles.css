@@ -1,3 +1,11 @@
+#stopButton, #homeButton {
+	display: none;
+}
+
+a.tweet-user:hover {
+	cursor: pointer;
+}
+
 div.controls {
 	margin: 10px 0 30px;
 }
