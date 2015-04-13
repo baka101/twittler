@@ -31,8 +31,13 @@
         /******************************************
         INITIATING VARIABLES
         *******************************************/
+        //variable to for DOM element where tweets are inserted
         var $tweetSection = $('ul.tweets');
+
+        //variable to track interval function
         var intervalID = 0;
+
+        //initializing variables for activeStream & activeKey 
         var activeStream = streams;
         var activeKey = 'home';
 
@@ -78,7 +83,7 @@
           else
             var shown = index;
 
-          //check length of streams.home; if it has changed, add new tweet
+          //check length of desired stream against what has been shown, if different, add new tweets
           if (shown !== streams[key].length)
           {
             for (var i=shown; i<streams[key].length; i++)
@@ -97,7 +102,7 @@
         SCRIPT WHEN PAGE LOADS
         ************************************/
         //refresh once to display initial tweets
-        refreshTweets(activeStream, activeKey);
+        refreshTweets(activeStream, activeKey, 0);
 
         /************************
         BUTTONS AND INTERACTIONS
